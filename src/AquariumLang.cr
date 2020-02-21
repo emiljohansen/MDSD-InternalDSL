@@ -1,11 +1,12 @@
 require builder
+require interpreter
 
 # TODO: Write documentation for `AquariumLang`
 module AquariumLang
   VERSION = "0.1.0"
   builder = TankBuilder.new
 
-  builder.new_layout("Layout1", "60 30 36", "Square")
+  builder.new_layout("Layout1", "60 30", "Square")
     .section("Section1", "20 30", "Square")
       .object()
       .object()
@@ -18,13 +19,13 @@ module AquariumLang
     .section("Section4", "15", "Circle")
       .object()
     .section("Section5", "10 10").add_to("Section4")
-  .new_layout()
+  .new_layout("Layout2", "20 45", "Square")
     .section()
-      .object
+      .object()
     .section()
       .object()
       .object()
-  .new_layout()
+  .new_layout("Layout3", "20", "Circle")
     .section()
       .object()
   

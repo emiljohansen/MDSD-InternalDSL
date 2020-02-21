@@ -6,6 +6,7 @@ class AquariumObject
 
     def initialize(name : String, dimensions : String, type : String, shape : Shape)
         @name
+        @dimensions
         @type
         @shape
     end

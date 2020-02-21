@@ -6,7 +6,9 @@ class Section
     property contains : Array = [] of T
 
     def initialize(name : String, dimensions : String, shape : Shape)
-
+        @name
+        @dimensions
+        @shape
     end
 
 end
