@@ -3,11 +3,10 @@ class Tank
     property name : String
     property dimensions : String
 
-    property contains : Array
+    property contains : Array = [] of Layout
 
 
-    def initialize(name : String, dimensions : String, contains : Array)
+    def initialize(name : String, dimensions : String)
         @name
         @dimensions
-        @contains
     end

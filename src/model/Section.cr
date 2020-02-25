@@ -5,7 +5,7 @@ class Section
     property shape : Shape
     property contains : Array = [] of T
 
-    def initialize(name : String, dimensions : String, shape : Shape)
+    def initialize(name : String, dimensions : String, shape : String)
         @name
         @dimensions
         @shape

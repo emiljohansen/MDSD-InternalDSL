@@ -29,14 +29,14 @@ module AquariumLang
     .section()
       .object()
   
-  .create_tank()
+  .create_tank("AwesomeTank", "120 50 50")
     .layout("layout1")
     .layout("layout2")
     .new_layout("layout3")
       .section("Something")
         .object()
         .object()
-  .create_tank()
+  .create_tank("SmolTank", "40 20 25")
     .layout("layout3")
     .layout("layout2")
 end
