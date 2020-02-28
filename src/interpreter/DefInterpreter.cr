@@ -8,6 +8,7 @@ require "json"
 
 class DefInterpreter
 
+    #TODO: Test.
     def extract_dimensions(dim : String, shape : String) : [] of Float
         dimensions = [] of Float
         if shape == "Square"
@@ -25,10 +26,12 @@ class DefInterpreter
         draw(obj.shape, obj.dimensions)
     end
 
+    #TODO: Implement
     def draw(sec : Section)
         draw(sec.shape, sec.dimensions)
     end
 
+    #TODO: Implement
     def draw(shape : String, dimensions : String)
     if shape == "Square"
 
@@ -40,6 +43,7 @@ class DefInterpreter
 
     end
 
+    #TODO: Implement
     def shadow(tank : Tank)
         # Iterate sections and objects.
         # Check if objects further back are shorter than ones in front.
@@ -58,10 +62,13 @@ class DefInterpreter
         area
     end
 
+    #TODO: Implement
+    #FIXME: Position
     def golden_ratio(tank : Tank)
 
     end
 
+    #TODO: Test
     def space_waste(tank : Tank) : Float
         # How much space is not occupied by sections.
         tankArea = area_calc(extract_dimensions(tank.dimensions, tank.shape))
@@ -76,18 +83,22 @@ class DefInterpreter
         wastedSpace
     end
 
+    #TODO: Implement
     # Grab user input, to allow for overlap or no. If not enough space, and no overlap allowed, raise error.
     # If wasted space is greater than some percentage, ask if the user wants to add additional layouts. -> Print options.
     # User input, what tanks to include in output. Write out the created tanks.
     # User input, file format.
+    #FIXME: Allow removal of objects that are too tall? Maybe allow adding to different section.
     def interpret()
     
     end
 
+    #TODO: Define file formatting.
     def write_to_html(path : String)
 
     end
 
+    #TODO: Define json layouts. Print only tank?
     def write_to_json(path : String)
 
     end
