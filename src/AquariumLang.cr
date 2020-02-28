@@ -1,5 +1,5 @@
-require builder
-require interpreter
+require "builder"
+require "interpreter"
 
 # TODO: Write documentation for `AquariumLang`
 module AquariumLang
@@ -8,11 +8,11 @@ module AquariumLang
 
   builder.new_layout("Layout1", "60 30", "Square")
     .section("Section1", "20 30", "Square")
-      .object()
-      .object()
-      .object()
+      .object("Object1", "", "", "")
+      .object("Object2", "", "", "")
+      .object("Object3", "", "", "")
     .section("Section2", "15 15", "Square")
-      .object()
+      .object("", "", "", "")
     .section("Section3", "10", "Circle").add_to("Section2")
       .object()
       .object()
@@ -22,7 +22,7 @@ module AquariumLang
   .new_layout("Layout2", "20 45", "Square")
     .section()
       .object()
-    .section()
+    .section("Section6", "15 25", "Square")
       .object()
       .object()
   .new_layout("Layout3", "20", "Circle")
