@@ -26,13 +26,16 @@ class TankBuilder
     # Add a section to the last defined section.
     def add_to(section : String)
         sec = defVariables[section] # Find section reference
-        sec.contains << defVariables.select{ |k, v| typeof(v) == Section}.lastKey
+        sec2 = defVariables.select{ |k, v| typeof(v) == Section}.lastKey
+        sec.contains << sec2 unless sec == sec2
         self
     end
 
     # Add a previously defined section or object to a section.
     def add_to(object : String, section : String)
-        defVariables[section].contains << defVariables[object]
+        sec = defVariables[section]
+        obj = defVariables[object]
+        sec.contains << obj unless sec == obj
         self
     end
 
