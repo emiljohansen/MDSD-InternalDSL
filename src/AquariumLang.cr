@@ -44,5 +44,5 @@ module AquariumLang
 
   interpreter = DefInterpreter.new
 
-  interpreter.interpret(tanks)
+  interpreter.interpret(tanks, builder.defLayouts)
 end

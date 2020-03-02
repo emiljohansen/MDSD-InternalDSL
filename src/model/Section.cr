@@ -20,4 +20,15 @@ class Section
         @contains
     end
 
+    def to_html() : String
+        returnstring = ""
+        returnstring += "<div>"
+        contains.each {|part|
+            returnstring += "Section Name: #{name}\n dimensions #{dimensions}, shape #{shape}" 
+            returnstring += part.to_html()
+        }
+        returnstring += "</div>"
+        returnstring
+    end
+
 end
