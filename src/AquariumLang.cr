@@ -30,15 +30,15 @@ module AquariumLang
       .object("Object11", "10 25", "Circle", "Plant")
   
   .create_tank("AwesomeTank", "120 50 50")
-    .layout("layout1")
-    .layout("layout2")
-    .new_layout("layout3", "20 20", "Square")
+    .layout("Layout1")
+    .layout("Layout2")
+    .new_layout("Layout3", "20 20", "Square")
       .section("Something", "30 30", "Square")
         .object("Object12", "10 15 15", "Square", "Rock")
         .object("Object13", "10 5 5", "Square", "Rock")
   .create_tank("SmolTank", "40 20 25")
-    .layout("layout3")
-    .layout("layout2")
+    .layout("Layout3")
+    .layout("Layout2")
 
   tanks = builder.build()
 

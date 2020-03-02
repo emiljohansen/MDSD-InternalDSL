@@ -9,7 +9,8 @@ class TankBuilder
 
     @defTanks : Hash(String, Tank) = {} of String => Tank
     @defLayouts : Hash(String, Layout) = {} of String => Layout
-    @defVariables : Hash(String, Section | AquariumObject) = {} of String => Section | AquariumObject
+    @defVariables : Hash(String, AquariumObject) = {} of String => AquariumObject
+    @defSections : Hash(String, Section) = {} of String => Section
 
     def initialize()
 
@@ -27,12 +28,17 @@ class TankBuilder
         @defVariables
     end
 
+    def defSections
+        @defSections
+    end
+
     # Position ?
     # Create a new object, adds object to last defined section.
     def object(name : String, type : String, dimensions : String, shape : String)
         ao = AquariumObject.new(name, type, dimensions, shape)
         defVariables[name] = ao # Necessary?
-        section = defVariables.select{ |k, v| typeof(v) == Section}.last_value
+        #section = defVariables.select{ |k, v| typeof(v) == Section.class}.last_value #Doesn't work, as type is Section | AquariumObject
+        section = defSections.last_value
         if section.is_a?(Section)
             section.contains << ao #FIXME: Type coerce to Section. (Introduce seperate maps for section and object?)
         end
@@ -42,21 +48,22 @@ class TankBuilder
     # Create a new section
     def section(name : String, dimensions : String, shape : String)
         sec = Section.new(name, dimensions, shape)
-        defVariables[name] = sec
+        defSections[name] = sec
         self
     end
 
     # Add a section to the last defined section.
     def add_to(section : String)
-        sec = defVariables[section] # Find section reference
-        sec2 = defVariables.select{ |k, v| typeof(v) == Section}.last_value
+        sec = defSections[section] # Find section reference
+        #sec2 = defVariables.select{ |k, v| typeof(v) == Section}.last_value
+        sec2 = defSections.last_value
         sec.contains << sec2 unless sec == sec2 if sec.is_a?(Section)
         self
     end
 
     # Add a previously defined section or object to a section.
     def add_to(object : String, section : String)
-        sec = defVariables[section]
+        sec = defSections[section]
         obj = defVariables[object]
         sec.contains << obj unless sec == obj
         self

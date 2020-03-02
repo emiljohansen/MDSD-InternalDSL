@@ -10,12 +10,12 @@ class DefInterpreter
 
     #TODO: Test.
     # Create an array of dimensional values from the provided string, 
-    def extract_dimensions(dim : String, shape : String) : Array of Float
-        dimensions = [] of Float
+    def extract_dimensions(dim : String, shape : String)
+        dimensions = [] of Float64
         if shape == "Square"
-            dimensions = dim.split(" ").map! {|x| x as Float} # Split given string on space, map into new array as floats.
+            dimensions = dim.split(" ").map {|x| x.to_f()} # Split given string on space, map into new array as floats.
         elsif shape == "Circle"
-            dimensions = dim.split(" ").map! {|x| x as Float}
+            dimensions = dim.split(" ").map {|x| x.to_f()}
         else
             raise "Unknown shape #{shape}" # Unhandled shape, raises an error.
         end
@@ -53,9 +53,8 @@ class DefInterpreter
     #TODO: Implement
     # Check if anything is too tall and wont fit in the tank.
     def height_check(tank : Tank) : Bool
-        tank_height = tank.extract_dimensions(tank.dimensions, "Square").pop(1)
-        while tank.contains.size < 0
-            a = tank.contains.pop(1)
+        tank_height = extract_dimensions(tank.dimensions, "Square").last
+        tank.contains.each { |a|
             if a.is_a?(Section)
                 b = find_tallest(a)
                 if b > tank_height
@@ -63,11 +62,11 @@ class DefInterpreter
                 end
             else
                 dim = extract_dimensions(a.dimensions, a.shape)
-                if dim.pop(1) > tank_height
+                if dim.last > tank_height
                     return false # False if something sticks out.
                 end
             end
-        end
+        }
         true # Everything fits in the tank.
     end
 
@@ -76,12 +75,12 @@ class DefInterpreter
     def find_tallest(sec : Section) : Float
         tallest = 0
         while sec.contains.size < 0
-            a = sec.contains.pop(1)
+            a = sec.contains.first
             if a.is_a?(Section)
                 b = find_tallest(a)
             else
                 dim = extract_dimensions(a.dimensions, a.shape)
-                height = dim.pop(1)
+                height = dim.last
                 tallest = height if tallest < height
             end
         end
@@ -94,7 +93,7 @@ class DefInterpreter
             lw = dimensions.first(2)
             area = lw.pop * lw.pop
         elsif dimensions.size == 2
-            area = dimensions.first(1) * 3.14
+            area = dimensions.first * 3.14
         else
             raise "Unknown shape"
         end
@@ -111,16 +110,19 @@ class DefInterpreter
     # How much space is not occupied by something.
     # Test for unoccupied space in sections too?
     def space_waste(tank : Tank) : Float
-        tankArea = area_calc(extract_dimensions(tank.dimensions, tank.shape))
+        tankArea = area_calc(extract_dimensions(tank.dimensions, "Square"))
         occupiedArea = 0
-        while tank.contains.size != 0
-            a = tank.contains.pop(1)
+        tank.contains.each { |a|
             areaDimensions = extract_dimensions(a.dimensions, a.shape)
 
             occupiedArea += area_calc(areaDimensions)
-        end
+        }
         wastedSpace = (occupiedArea / tankArea) #Percentage of wasted space.
         wastedSpace
+    end
+
+    def show_layouts()
+    
     end
 
     #TODO: Implement
@@ -148,9 +150,34 @@ class DefInterpreter
             puts "Unrecognized format #{requested_format}"
         end
 
-        while tanks.size > 0
+        iter = tanks.each()
+
+        iter.each { |tank|
+            puts tank.name
+            emptySpace = space_waste(tank)
+            puts "Empty space percentage: #{emptySpace}"
+
+            if emptySpace > 0.5
+                puts "There is a lot of empty space, do you wish to add additional layouts? (y/n)"
+                addLayouts = gets
+
+                if addLayouts == "y"
+                    show_layouts()
+                end
             
-        end
+            elsif emptySpace > 1
+                puts "Defined layout is too large for the tank, #{tank.name}"
+            end
+
+            if height_check(tank)
+                puts "No objects stick out."
+            else
+                puts "Some objects are too tall for the tank"
+                #TODO: Show object that breaks the rule.
+            end
+
+        }
+            
     end
 
     #TODO: Define file formatting.
