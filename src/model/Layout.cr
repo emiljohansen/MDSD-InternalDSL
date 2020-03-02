@@ -2,10 +2,10 @@ class Layout
 
     property name : String
     property dimensions : String
-    property contains : Array = [] of T
+    property shape : String
+    #property contains : Array
 
-    def initialize(name : String, dimensions : String)
-        @name
-        @dimensions        
+    def initialize(@name : String, @dimensions : String, @shape : String)
+        @contains = [] of Section | AquariumObject
     end
 end
