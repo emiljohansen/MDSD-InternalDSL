@@ -1,7 +1,7 @@
 require "./builder/TankBuilder"
 require "./interpreter/DefInterpreter"
 
-# TODO: Write documentation for `AquariumLang`
+# DSL for specifying Aquarium Layouts, inspired by the UI example in MDSD F20.
 module AquariumLang
   VERSION = "0.1.0"
   builder = TankBuilder.new

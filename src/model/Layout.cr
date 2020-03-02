@@ -1,3 +1,5 @@
+require "json"
+
 class Layout
 
     property name : String
@@ -7,6 +9,10 @@ class Layout
 
     def initialize(@name : String, @dimensions : String, @shape : String)
         @contains = [] of Section | AquariumObject
+    end
+
+    def contains
+        @contains
     end
 
     def to_html() : String
@@ -20,7 +26,11 @@ class Layout
         returnstring   
     end
 
-    def contains
-        @contains
-    end
+    JSON.mapping(
+        name: String,
+        dimensions: String,
+        shape: String,
+        contains: Array(Section | AquariumObject)
+    )
+
 end

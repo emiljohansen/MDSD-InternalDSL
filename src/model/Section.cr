@@ -1,3 +1,5 @@
+require "json"
+
 class Section
 
     property name : String
@@ -30,5 +32,12 @@ class Section
         returnstring += "</div>"
         returnstring
     end
+
+    JSON.mapping(
+        name: String,
+        dimensions: String,
+        shape: String,
+        contains: Array(Section | AquariumObject),
+    )
 
 end

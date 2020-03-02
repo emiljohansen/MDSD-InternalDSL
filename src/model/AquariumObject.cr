@@ -1,3 +1,5 @@
+require "json"
+
 class AquariumObject
 
     property name : String
@@ -16,5 +18,12 @@ class AquariumObject
         returnstring += "</div>"
         returnstring
     end
+
+    JSON.mapping(
+        name: String,
+        dimensions: String,
+        shape: String,
+        type: String,
+    )
 
 end

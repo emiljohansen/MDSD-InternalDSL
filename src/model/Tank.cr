@@ -1,9 +1,9 @@
+require "json"
+
 class Tank
 
     property name : String
     property dimensions : String
-
-    #property contains : Array = [] of Layout
 
 
     def initialize(@name : String, @dimensions : String)
@@ -15,4 +15,10 @@ class Tank
     def contains
         @contains
     end
+
+    JSON.mapping(
+        name: String,
+        dimensions: String,
+        contains: Array(Layout),
+    )
 end

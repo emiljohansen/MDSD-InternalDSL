@@ -1,15 +1,12 @@
-# Default interpreter.
-# Ideas?
-# Spacial analysis. How well is the space utilised, does anything intersect the golden ratio? Does anything block the view of something? Does everything fit without overlap? -> Ask if the user wants overlap.
-# Interpret dimensions -> How to draw circles and squares.
-# Get user input if there are options, maybe duplicate objects in different layouts. -> Allow overlapping sections or no=
-
 require "json"
 
+# Default interpreter
+# Does a barebone spacial analysis, detecting excessive amounts of empty space, allowing for the addition of extra layouts after the fact, assuming they have been previously defined.
+# Interacts with the user, allowing the choice of adding or removing layouts.
+# User choice as to what file format to print in, current options are HTML and JSON (bugged)
 class DefInterpreter
 
-    #TODO: Test.
-    # Create an array of dimensional values from the provided string, 
+    # Create an array of dimensional values from the provided string, and the shape.
     def extract_dimensions(dim : String, shape : String)
         dimensions = [] of Float64
         if shape == "Square"
@@ -23,16 +20,19 @@ class DefInterpreter
     end
 
     #TODO: Implement
+    # Draw object as an ASCII image.s
     def draw(obj : AquariumObject)
         draw(obj.shape, obj.dimensions)
     end
 
     #TODO: Implement
+    # Draw object as an ASCII image.
     def draw(sec : Section)
         draw(sec.shape, sec.dimensions)
     end
 
     #TODO: Implement
+    # Draw the object graph as an ASCII image.
     def draw(shape : String, dimensions : String)
         if shape == "Square"
 
@@ -44,10 +44,9 @@ class DefInterpreter
     end
 
     #TODO: Implement
+    #FIXME: Position
+    # Checks if any object is taller than an object behind it.
     def shadow(tank : Tank)
-        # Iterate sections and objects.
-        # Check if objects further back are shorter than ones in front.
-        # Position?
     end
 
     # TODO: Enhancement, Return the object too.
@@ -70,7 +69,6 @@ class DefInterpreter
         true # Everything fits in the tank.
     end
 
-    #TODO: Add support for sending along the object.
     # Finds the tallest object in a section.
     def find_tallest(sec : Section) : Tuple(Float, AquariumObject)
         tallest = 0
@@ -106,13 +104,12 @@ class DefInterpreter
 
     #TODO: Implement
     #FIXME: Position
+    # Checks to see if any object centers intersect the golden ratio.
     def golden_ratio(tank : Tank)
 
     end
 
-    #TODO: Test
     # How much space is not occupied by something.
-    # Test for unoccupied space in sections too?
     def space_waste(tank : Tank) : Float
         tankArea = area_calc(extract_dimensions(tank.dimensions, "Square"), "Square") #Assumption that tanks are squares.
         occupiedArea = 0
@@ -126,16 +123,14 @@ class DefInterpreter
         wastedSpace
     end
 
+    # Prints the defined layouts to stdout
     def show_layouts(layouts : Hash(String, Layout))
             layouts.each {|l|
                 puts "Layout name: #{l[0]}, layout shape #{l[1].shape}, layout size: #{l[1].dimensions}"
         }
     end
 
-    #TODO: Implement
-    # Grab user input, to allow for overlap or no. If not enough space, and no overlap allowed, raise error.
-    # If wasted space is greater than some percentage, ask if the user wants to add additional layouts. -> Print options.
-    # User input, what tanks to include in output. Write out the created tanks.
+    # If wasted space is greater than some percentage, ask if the user wants to add additional layouts. -> Print defined layouts.
     # User input, file format.
     def interpret(tanks : Array(Tank), layouts : Hash(String, Layout))
         puts "Welcome to AquariumLang (WIP)."
@@ -148,30 +143,37 @@ class DefInterpreter
         puts "Input the desired path"
         path = gets
 
-        iter = tanks.each()
-
-        iter.each { |tank|
+        tanks.each { |tank|
             puts tank.name
             emptySpace = space_waste(tank)
             puts "Empty space percentage: #{emptySpace}"
 
+            # TODO: Loop ti loop
             if emptySpace > 0.5
-                puts "There is a lot of empty space, do you wish to add additional layouts? (y/n)"
-                addLayouts = gets
+                layoutLoop = true
+                while layoutLoop
+                    puts "There is a lot of empty space, do you wish to add additional layouts? (y/n)"
+                    addLayouts = gets
 
-                if addLayouts == "y"
-                    show_layouts(layouts)
-                    puts "Which layout do you wish to add?"
-                    addedLayout = gets
+                    if addLayouts == "y"
+                        show_layouts(layouts)
+                        puts "Which layout do you wish to add?"
+                        addedLayout = gets
 
-                    if layouts.has_key?(addedLayout) #has_key? as addedLayout is a union of String | Nil
-                        tank.contains << layouts[addedLayout] # Add new layout to tank. TODO: Repeat if empty space is too big or small still.
+                        if layouts.has_key?(addedLayout) #has_key? as addedLayout is a union of String | Nil
+                            tank.contains << layouts[addedLayout] # Add new layout to tank. TODO: Repeat if empty space is too big or small still.
+                        end
+                    elsif addLayouts == "n"
+                        layoutLoop = false
                     end
                 end
             
             elsif emptySpace > 1
                 puts "Defined layout is too large for the tank, #{tank.name}"
                 puts "Do you wish to remove something from the tank?"
+                tank.contains.each {|layout|
+                    puts "Layout name: #{layout.name}, layout shape #{layout.shape}, layout size: #{layout.dimensions}"
+                }
             end
 
             if height_check(tank)
@@ -182,6 +184,7 @@ class DefInterpreter
             end
 
         }
+        puts "Outputting tanks to #{requested_format} on #{path}"
 
         if requested_format == "HTML"
             write_to_html(path || "./", tanks)
@@ -193,7 +196,7 @@ class DefInterpreter
             
     end
 
-    #TODO: Define file formatting.
+    #Write tanks to html file.
     def write_to_html(path : String, tanks : Array(Tank))
         f = File.new(path + ".html", "w")
         f.puts "<!DOCTYPE html>"
@@ -213,9 +216,15 @@ class DefInterpreter
         f.close()
     end
 
-    #TODO: Implement
+    # Write tanks to json file.
+    #TODO: Why does it only write layouts and not the nested objects.
     def write_to_json(path : String, tanks : Array(Tank))
-        f = File.new(path, "w")
+        puts "Currently not functional, does not write sections nor objects, only layouts."
+        f = File.new(path + ".json", "w")
+
+        f.puts tanks.to_json
+
+        f.close()
 
     end
 
