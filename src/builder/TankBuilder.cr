@@ -50,7 +50,7 @@ class TankBuilder
         sec = defSections[section] # Find section reference
         sec2 = defSections.last_value # Latest defined section
         sec.contains << sec2 unless sec == sec2 if sec.is_a?(Section) # Add to section 1 to section 2, if they are not the same.
-        # Remove section from layout if it gets added to section
+        # Remove section from layout if it gets added to section. Weakness of chosen approach.
         defLayouts.each { |tup|
             tup[1].contains.each { |section|
                 if sec2 == section

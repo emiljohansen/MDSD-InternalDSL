@@ -18,7 +18,7 @@ class Layout
     def to_html() : String
         returnstring = ""
         returnstring = "<div>"
-        returnstring += "Layout Name: #{name}\n dimensions #{dimensions}, shape #{shape}" 
+        returnstring += "Layout Name: #{name}\n dimensions: #{dimensions}, shape: #{shape}" 
         contains.each {|part|
             returnstring += part.to_html()
         }

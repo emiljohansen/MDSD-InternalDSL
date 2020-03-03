@@ -20,13 +20,13 @@ class DefInterpreter
     end
 
     #TODO: Implement
-    # Draw object as an ASCII image.s
+    # Draw object as an ASCII image.
     def draw(obj : AquariumObject)
         draw(obj.shape, obj.dimensions)
     end
 
     #TODO: Implement
-    # Draw object as an ASCII image.
+    # Draw section as an ASCII image.
     def draw(sec : Section)
         draw(sec.shape, sec.dimensions)
     end
@@ -43,8 +43,7 @@ class DefInterpreter
         end
     end
 
-    #TODO: Implement
-    #FIXME: Position
+    #TODO: Implement position
     # Checks if any object is taller than an object behind it.
     def shadow(tank : Tank)
     end
@@ -92,18 +91,15 @@ class DefInterpreter
     def area_calc(dimensions : Array, shape : String) : Float
         if shape == "Square" # Not ideal, maybe take shape too.
             area = dimensions[0] * dimensions[1] # L * W
-            puts "Square Area: #{area}"
         elsif shape == "Circle" 
             area = (dimensions.first ** 2) * 3.14 #Radius^2 * PI
-            puts "Circle Area #{area}"
         else
             raise "Unknown shape"
         end
         area
     end
 
-    #TODO: Implement
-    #FIXME: Position
+    #TODO: Implement position
     # Checks to see if any object centers intersect the golden ratio.
     def golden_ratio(tank : Tank)
 
@@ -215,7 +211,7 @@ class DefInterpreter
             end
 
         }
-        puts "Outputting tanks to #{requested_format} on #{path}"
+        puts "Outputting tanks to #{requested_format} on #{path} .#{requested_format}"
 
         if requested_format == "HTML"
             write_to_html(path || "./tanks", tanks)

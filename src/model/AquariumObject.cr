@@ -15,7 +15,7 @@ class AquariumObject
     def to_html()
         returnstring = ""
         returnstring += "<div>"
-        returnstring += "Object Name: #{name}\n dimensions #{dimensions}, shape #{shape}, type #{type}"
+        returnstring += "Object Name: #{name}\n dimensions: #{dimensions}, shape: #{shape}, type: #{type}"
         returnstring += "</div>"
         returnstring
     end

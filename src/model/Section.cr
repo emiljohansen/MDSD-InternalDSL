@@ -8,9 +8,6 @@ class Section
     property shape : String
 
     def initialize(@name : String, @dimensions : String, @shape : String)
-        @name
-        @dimensions
-        @shape
         @contains = [] of Section | AquariumObject
     end
 
@@ -26,7 +23,7 @@ class Section
         returnstring = ""
         returnstring += "<div>"
         contains.each {|part|
-            returnstring += "Section Name: #{name}\n dimensions #{dimensions}, shape #{shape}" 
+            returnstring += "Section Name: #{name}\n dimensions: #{dimensions}, shape: #{shape}" 
             returnstring += part.to_html()
         }
         returnstring += "</div>"

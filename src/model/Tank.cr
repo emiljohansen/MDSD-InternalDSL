@@ -8,8 +8,6 @@ class Tank
 
 
     def initialize(@name : String, @dimensions : String)
-        @name
-        @dimensions
         @contains = []of Layout
     end
 
