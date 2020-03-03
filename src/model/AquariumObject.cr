@@ -1,5 +1,6 @@
 require "json"
 
+# Represents an object in the aquarium, fx. decorations or plants.
 class AquariumObject
 
     property name : String

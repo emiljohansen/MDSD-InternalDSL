@@ -1,11 +1,11 @@
 require "json"
 
+# Represents defined sections in the aquarium, these can contain other sections or objects.
 class Section
 
     property name : String
     property dimensions : String
     property shape : String
-    #property contains : Array
 
     def initialize(@name : String, @dimensions : String, @shape : String)
         @name

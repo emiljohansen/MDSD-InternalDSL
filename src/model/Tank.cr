@@ -1,5 +1,6 @@
 require "json"
 
+# Defines a tank, consists of layouts.
 class Tank
 
     property name : String

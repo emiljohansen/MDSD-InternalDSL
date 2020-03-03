@@ -28,6 +28,11 @@ module AquariumLang
   .new_layout("Layout3", "20", "Circle")
     .section("Section8", "15 15", "Square")
       .object("Object11", "10 25", "Circle", "Plant")
+  .new_layout("Layout4", "10 25", "Square")
+    .section("Section9", "10 15", "Square")
+      .object("Object14", "8 8 15", "Square", "Plant")
+    .section("Section10", "10 10", "Square")
+      .object("Object15", "8 8 25", "Square", "Plant")
   
   .create_tank("AwesomeTank", "120 50 50")
     .layout("Layout1")

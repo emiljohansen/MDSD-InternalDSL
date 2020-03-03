@@ -144,14 +144,13 @@ class DefInterpreter
         path = gets
 
         tanks.each { |tank|
-            puts tank.name
+            puts "Analysing tank: #{tank.name}"
             emptySpace = space_waste(tank)
             puts "Empty space percentage: #{emptySpace}"
 
-            # TODO: Loop ti loop
             if emptySpace > 0.5
                 layoutLoop = true
-                while layoutLoop
+                while layoutLoop #TODO: Fix Loop
                     puts "There is a lot of empty space, do you wish to add additional layouts? (y/n)"
                     addLayouts = gets
 
@@ -187,9 +186,9 @@ class DefInterpreter
         puts "Outputting tanks to #{requested_format} on #{path}"
 
         if requested_format == "HTML"
-            write_to_html(path || "./", tanks)
+            write_to_html(path || "./tanks", tanks)
         elsif requested_format == "JSON"
-            write_to_json(path ||"./", tanks)
+            write_to_json(path ||"./tanks", tanks)
         else
             puts "Unrecognized format #{requested_format}"
         end
@@ -199,12 +198,14 @@ class DefInterpreter
     #Write tanks to html file.
     def write_to_html(path : String, tanks : Array(Tank))
         f = File.new(path + ".html", "w")
+        # Standard HTML stuff.
         f.puts "<!DOCTYPE html>"
         f.puts "<html>"
         f.puts "<head><title> Aquarium Layout Generator 1.0 </title></head>"
         f.puts "<body>"
         
-        tanks.each {|tank| 
+        tanks.each {|tank|
+            # Should probably be moved to Tank. Similar to write_to_json. 
             f.puts "<div>"
             f.puts "Tank name: #{tank.name}\n Layouts: "
             tank.contains.each {|layout| 
