@@ -123,10 +123,17 @@ class DefInterpreter
         wastedSpace
     end
 
-    # Prints the defined layouts to stdout
+    # Prints the defined layouts to stdout.
     def show_layouts(layouts : Hash(String, Layout))
             layouts.each {|l|
                 puts "Layout name: #{l[0]}, layout shape: #{l[1].shape}, layout size: #{l[1].dimensions}"
+        }
+    end
+
+    # Prints layouts of arrays to stdout.
+    def show_layouts(layouts : Array(Layout))
+        layouts.each {|layout|
+            puts "Layout name: #{layout.name}, layout shape: #{layout.shape}, layout size: #{layout.dimensions}"
         }
     end
 
@@ -137,12 +144,14 @@ class DefInterpreter
         puts "Which output format do you prefer? (HTML/JSON): "
         requested_format = gets
 
+        # Exit if the user does not request a format.
         exit if requested_format.nil?
 
-
-        puts "Input the desired path"
+        # Get path. If Nil default to current directory.
+        puts "Input the desired path including file name."
         path = gets
 
+        # Repeat process for every defined tank.
         tanks.each { |tank|
             puts "Analysing tank: #{tank.name}"
             layoutLoop = false
@@ -150,47 +159,53 @@ class DefInterpreter
                 emptySpace = space_waste(tank)
                 puts "Empty space percentage: #{emptySpace}"
 
+                # A lot of empty space, give option of adding additional layouts.
                 if emptySpace < 0.5
                         puts "There is a lot of empty space, do you wish to add additional layouts? (y/n)"
                         addLayouts = gets
-
+                        # User wants to add layout, display options.
                         if addLayouts == "y"
                             show_layouts(layouts)
+                            # Get user input
                             puts "Which layout do you wish to add?"
                             addedLayout = gets
 
-                            if layouts.has_key?(addedLayout) #has_key? as addedLayout is a union of String | Nil
-                                tank.contains << layouts[addedLayout] # Add new layout to tank. TODO: Repeat if empty space is too big or small still.
+                            #has_key? as addedLayout is a union of String | Nil
+                            if layouts.has_key?(addedLayout)
+                                # Add new layout to tank.
+                                tank.contains << layouts[addedLayout]
                             end
+                        # Break out of loop if user does not want to add any layouts.
                         elsif addLayouts == "n"
                             layoutLoop = true
                         end
-            
-            elsif emptySpace > 1
-                puts "Defined layout is too large for the tank, #{tank.name}"
-                puts "Do you wish to remove something from the tank?"
-                removeLayouts = gets
+                # There is not enough space for everything.
+                elsif emptySpace > 1
+                    puts "Defined layout is too large for the tank, #{tank.name}"
+                    puts "Do you wish to remove something from the tank? (y/n)"
+                    removeLayouts = gets
 
-                if removeLayouts == "y"
-                    tank.contains.each {|layout|
-                        puts "Layout name: #{layout.name}, layout shape: #{layout.shape}, layout size: #{layout.dimensions}"
-                    }
+                    # User wants to remove, display options.
+                    if removeLayouts == "y"
+                        show_layouts(tank.contains)
 
-                    removal = gets
-                    # Remove selected layout.
-                    tank.contains.each {|layout|
-                        if layout.name == removal
-                            tank.contains.delete(layout)
-                        end
-                    }
-                elsif removeLayouts == "n"
+                        removal = gets
+                        # Remove selected layout
+                        tank.contains.each {|layout|
+                            if layout.name == removal
+                                tank.contains.delete(layout)
+                            end
+                        }
+                    # Break out of loop if user does not want to remove anything.
+                    elsif removeLayouts == "n"
+                        layoutLoop = true
+                    end
+                    # Break out if there is not a lot of empty space.
+                else
                     layoutLoop = true
                 end
-            else
-                layoutLoop = true
+                break if layoutLoop
             end
-            break if layoutLoop
-        end
 
             if height_check(tank)
                 puts "No objects stick out."
