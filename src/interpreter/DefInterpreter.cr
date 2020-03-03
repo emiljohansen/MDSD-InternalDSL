@@ -173,6 +173,14 @@ class DefInterpreter
                 tank.contains.each {|layout|
                     puts "Layout name: #{layout.name}, layout shape #{layout.shape}, layout size: #{layout.dimensions}"
                 }
+
+                removal = gets
+                # Remove selected layout.
+                tank.contains.each {|layout|
+                    if layout.name == removal
+                        tank.contains.remove(layout)
+                }
+
             end
 
             if height_check(tank)
