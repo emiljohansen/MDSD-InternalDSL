@@ -126,7 +126,7 @@ class DefInterpreter
     # Prints the defined layouts to stdout
     def show_layouts(layouts : Hash(String, Layout))
             layouts.each {|l|
-                puts "Layout name: #{l[0]}, layout shape #{l[1].shape}, layout size: #{l[1].dimensions}"
+                puts "Layout name: #{l[0]}, layout shape: #{l[1].shape}, layout size: #{l[1].dimensions}"
         }
     end
 
@@ -145,43 +145,52 @@ class DefInterpreter
 
         tanks.each { |tank|
             puts "Analysing tank: #{tank.name}"
-            emptySpace = space_waste(tank)
-            puts "Empty space percentage: #{emptySpace}"
+            layoutLoop = false
+            loop do
+                emptySpace = space_waste(tank)
+                puts "Empty space percentage: #{emptySpace}"
 
-            if emptySpace > 0.5
-                layoutLoop = true
-                while layoutLoop #TODO: Fix Loop
-                    puts "There is a lot of empty space, do you wish to add additional layouts? (y/n)"
-                    addLayouts = gets
+                if emptySpace < 0.5
+                        puts "There is a lot of empty space, do you wish to add additional layouts? (y/n)"
+                        addLayouts = gets
 
-                    if addLayouts == "y"
-                        show_layouts(layouts)
-                        puts "Which layout do you wish to add?"
-                        addedLayout = gets
+                        if addLayouts == "y"
+                            show_layouts(layouts)
+                            puts "Which layout do you wish to add?"
+                            addedLayout = gets
 
-                        if layouts.has_key?(addedLayout) #has_key? as addedLayout is a union of String | Nil
-                            tank.contains << layouts[addedLayout] # Add new layout to tank. TODO: Repeat if empty space is too big or small still.
+                            if layouts.has_key?(addedLayout) #has_key? as addedLayout is a union of String | Nil
+                                tank.contains << layouts[addedLayout] # Add new layout to tank. TODO: Repeat if empty space is too big or small still.
+                            end
+                        elsif addLayouts == "n"
+                            layoutLoop = true
                         end
-                    elsif addLayouts == "n"
-                        layoutLoop = false
-                    end
-                end
             
             elsif emptySpace > 1
                 puts "Defined layout is too large for the tank, #{tank.name}"
                 puts "Do you wish to remove something from the tank?"
-                tank.contains.each {|layout|
-                    puts "Layout name: #{layout.name}, layout shape #{layout.shape}, layout size: #{layout.dimensions}"
-                }
+                removeLayouts = gets
 
-                removal = gets
-                # Remove selected layout.
-                tank.contains.each {|layout|
-                    if layout.name == removal
-                        tank.contains.remove(layout)
-                }
+                if removeLayouts == "y"
+                    tank.contains.each {|layout|
+                        puts "Layout name: #{layout.name}, layout shape: #{layout.shape}, layout size: #{layout.dimensions}"
+                    }
 
+                    removal = gets
+                    # Remove selected layout.
+                    tank.contains.each {|layout|
+                        if layout.name == removal
+                            tank.contains.delete(layout)
+                        end
+                    }
+                elsif removeLayouts == "n"
+                    layoutLoop = true
+                end
+            else
+                layoutLoop = true
             end
+            break if layoutLoop
+        end
 
             if height_check(tank)
                 puts "No objects stick out."
@@ -226,9 +235,7 @@ class DefInterpreter
     end
 
     # Write tanks to json file.
-    #TODO: Why does it only write layouts and not the nested objects.
     def write_to_json(path : String, tanks : Array(Tank))
-        puts "Currently not functional, does not write sections nor objects, only layouts."
         f = File.new(path + ".json", "w")
 
         f.puts tanks.to_json

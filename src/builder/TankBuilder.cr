@@ -41,6 +41,7 @@ class TankBuilder
     def section(name : String, dimensions : String, shape : String)
         sec = Section.new(name, dimensions, shape)
         defSections[name] = sec
+        defLayouts.last_value.contains << sec
         self
     end
 
@@ -49,6 +50,14 @@ class TankBuilder
         sec = defSections[section] # Find section reference
         sec2 = defSections.last_value # Latest defined section
         sec.contains << sec2 unless sec == sec2 if sec.is_a?(Section) # Add to section 1 to section 2, if they are not the same.
+        # Remove section from layout if it gets added to section
+        defLayouts.each { |tup|
+            tup[1].contains.each { |section|
+                if sec2 == section
+                    tup[1].contains.delete(section)
+                end
+            }
+        }
         self
     end
 
@@ -57,6 +66,14 @@ class TankBuilder
         sec = defSections[section]
         obj = defVariables[object]
         sec.contains << obj unless sec == obj
+        # Remove section from layout if it gets added to a section.
+        defLayouts.each { |tup|
+            tup[1].contains.each { |section|
+                if sec2 == section
+                    tup[1].contains.remove(section)
+                end
+            }
+        }
         self
     end
 

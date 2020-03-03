@@ -8,7 +8,7 @@ class Layout
     property shape : String
 
     def initialize(@name : String, @dimensions : String, @shape : String)
-        @contains = [] of Section | AquariumObject
+        @contains = [] of Section
     end
 
     def contains
@@ -30,7 +30,7 @@ class Layout
         name: String,
         dimensions: String,
         shape: String,
-        contains: Array(Section | AquariumObject)
+        contains: Array(Section)
     )
 
 end
