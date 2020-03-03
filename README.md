@@ -1,6 +1,6 @@
 # AquariumLang
 
-TODO: Finish Description
+A small internal DSL for defining layouts in aquaria, allows for creating and reusing layouts, sections and objects.
 
 ## Environment
 
@@ -12,16 +12,22 @@ In this environment, the program can be run using "crystal run AquariumLang.cr".
 
 ## Meta Model
 
-![Metamodel](Metamodel.png "Metamodel")
+![Metamodel](./Metamodel.png)
 
 ## Usage
 
 .object(NAME, DIMENSIONS, SHAPE, TYPE) $\rightarrow$ Creates an arbitrary object, given name, dimensions, shape and type.
+
 .section(NAME, DIMENSIONS, SHAPE) $\rightarrow$ Creates a new section, given name and dimensions.
+
 .add_to(SECTION_NAME) $\rightarrow$ Adds most recently defined section to a section, referred to by name.
+
 .add_to(NAME, SECTION_NAME) $\rightarrow$ Adds an arbitrary object or section to a section.
+
 .new_layout(NAME, DIMENSIONS, SHAPE) $\rightarrow$ Defines a new reusable layout.
+
 .layout(NAME) $\rightarrow$ Adds a previously defined layout to the most recently created tank.
+
 .create_tank(NAME, DIMENSIONS) $\rightarrow$ Creates a new tank. Assumed to be a square.
 
 Shape is currently one of Circle or Square.

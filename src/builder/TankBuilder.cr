@@ -61,10 +61,13 @@ class TankBuilder
         self
     end
 
-    # Add a previously defined section or object to a section.
+    # Add a previously defined object to a section.
     def add_to(object : String, section : String)
         sec = defSections[section]
-        obj = defVariables[object]
+        obj = defVariables[object]?
+        if obj.nil
+            obj = defSections[object]
+        end
         sec.contains << obj unless sec == obj
         # Remove section from layout if it gets added to a section.
         defLayouts.each { |tup|
